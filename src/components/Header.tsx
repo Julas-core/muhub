@@ -55,7 +55,7 @@ const Header = ({ avatarUrl }: HeaderProps) => {
               <Link to="/dashboard" className="transition-colors hover:text-primary">
                 Dashboard
               </Link>
-              <Link to="/study-groups" className="transition-colors hover:text-primary">
+              {/*<Link to="/study-groups" className="transition-colors hover:text-primary">
                 Study Groups
               </Link>
               <Link to="/forum" className="transition-colors hover:text-primary">
@@ -63,13 +63,13 @@ const Header = ({ avatarUrl }: HeaderProps) => {
               </Link>
               <Link to="/leaderboard" className="transition-colors hover:text-primary">
                 Leaderboard
-              </Link>
+              </Link>*/}
               <Link to="/exam-prep" className="transition-colors hover:text-primary">
                 Exam Prep
               </Link>
-              <Link to="/ai-assistant" className="transition-colors hover:text-primary">
+              {/*<Link to="/ai-assistant" className="transition-colors hover:text-primary">
                 AI Assistant
-              </Link>
+              </Link>*/}
               <Link to="/notes" className="transition-colors hover:text-primary">
                 Notes
               </Link>
