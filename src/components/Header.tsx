@@ -46,7 +46,7 @@ const Header = ({ avatarUrl }: HeaderProps) => {
         </div>
         </Link>
         {/* Navigation Links */}
-        <nav className="hidden md:flex items-center gap-4 text-sm font-medium ml-4" aria-label="Main navigation">
+        <nav className="hidden md:flex items-center gap-4 text-sm font-medium ml-2" aria-label="Main navigation">
           {/* <Link to="/" className="transition-colors hover:text-primary">
             Home
           </Link> */}
