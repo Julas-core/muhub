@@ -1,4 +1,4 @@
-import { Search } from "lucide-react";
+import { Search, SlidersHorizontal } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import heroBanner from "@/assets/university-gateway.jpg";
@@ -59,16 +59,15 @@ export const Hero = ({ onSearch }: HeroProps) => {
                 aria-label="Search for course materials"
               />
             </div>
-            <Button type="submit" size="lg" className="bg-primary hover:bg-primary/90 h-14 px-8">
-              Search
-            </Button>
             <Button 
               type="button" 
               variant="outline" 
-              className="h-14 px-5" 
+              size="icon"
+              className="h-14 w-14" 
               onClick={() => document.getElementById('school-filter')?.scrollIntoView({ behavior: 'smooth' })}
+              aria-label="Advanced Filters"
             >
-              Advanced Filters
+              <SlidersHorizontal className="h-5 w-5" />
             </Button>
           </div>
         </form>
