@@ -6,6 +6,7 @@ import { useToast } from "@/hooks/use-toast";
 import { UserPointsBadge } from "./UserPointsBadge";
 import { StudyStreak } from "./StudyStreak";
 import { NotificationBell } from "./NotificationBell";
+import { HoverCard, HoverCardContent, HoverCardTrigger } from "@/components/ui/hover-card";
 // Use Vite-compatible URL import for static asset (SVG) to avoid runtime import issues
 const StudyHubLogo = new URL('../assets/MuStudyHubv4..svg', import.meta.url).href;
 
@@ -88,12 +89,8 @@ const Header = ({ avatarUrl }: HeaderProps) => {
         {/* User Actions */}
         <div className="flex items-center gap-2">
           {user ? (
-            <>
-              <StudyStreak />
-              <UserPointsBadge userId={user.id} />
-              <NotificationBell />
-              
-              <Link to="/profile">
+            <HoverCard openDelay={200}>
+              <HoverCardTrigger asChild>
                 <button
                   className="inline-flex items-center justify-center rounded-md h-10 w-10 overflow-hidden hover:opacity-80 transition-opacity"
                   aria-label="Profile"
@@ -113,44 +110,53 @@ const Header = ({ avatarUrl }: HeaderProps) => {
                   )}
                   <span className="sr-only">Profile</span>
                 </button>
-              </Link>
-              
-              {isAdmin && (
-                <Link to="/admin" aria-label="Admin dashboard">
-                  <Button variant="outline" size="sm">
-                    <ShieldCheck className="mr-2 h-4 w-4" />
-                    Admin
-                  </Button>
-                </Link>
-              )}
-              <Link to="/upload" aria-label="Upload materials">
-                <Button variant="outline" size="sm">
-                  <Upload className="mr-2 h-4 w-4" />
-                  Upload
-                </Button>
-              </Link>
-              
-              <Button 
-                variant="outline" 
-                size="sm" 
-                onClick={handleSignOut}
-                className="hidden sm:flex"
-                aria-label="Sign out"
-              >
-                <LogOut className="mr-2 h-4 w-4" />
-                Sign Out
-              </Button>
-              
-              <Button 
-                variant="outline" 
-                size="icon"
-                onClick={handleSignOut}
-                className="sm:hidden"
-                aria-label="Sign out"
-              >
-                <LogOut className="h-4 w-4" />
-              </Button>
-            </>
+              </HoverCardTrigger>
+              <HoverCardContent className="w-80 bg-background border shadow-lg z-50" align="end">
+                <div className="space-y-4">
+                  <div className="flex flex-col gap-3">
+                    <StudyStreak />
+                    <UserPointsBadge userId={user.id} />
+                    <NotificationBell />
+                  </div>
+                  
+                  <div className="flex flex-col gap-2 pt-3 border-t">
+                    <Link to="/profile" className="w-full">
+                      <Button variant="outline" size="sm" className="w-full justify-start">
+                        <User className="mr-2 h-4 w-4" />
+                        Profile
+                      </Button>
+                    </Link>
+                    
+                    {isAdmin && (
+                      <Link to="/admin" className="w-full">
+                        <Button variant="outline" size="sm" className="w-full justify-start">
+                          <ShieldCheck className="mr-2 h-4 w-4" />
+                          Admin Dashboard
+                        </Button>
+                      </Link>
+                    )}
+                    
+                    <Link to="/upload" className="w-full">
+                      <Button variant="outline" size="sm" className="w-full justify-start">
+                        <Upload className="mr-2 h-4 w-4" />
+                        Upload
+                      </Button>
+                    </Link>
+                    
+                    <Button 
+                      variant="outline" 
+                      size="sm" 
+                      onClick={handleSignOut}
+                      className="w-full justify-start"
+                      aria-label="Sign out"
+                    >
+                      <LogOut className="mr-2 h-4 w-4" />
+                      Sign Out
+                    </Button>
+                  </div>
+                </div>
+              </HoverCardContent>
+            </HoverCard>
           ) : (
             <Link to="/auth" aria-label="Sign in to your account">
               <Button variant="outline" size="sm">
