@@ -75,15 +75,19 @@ const Header = ({ avatarUrl }: HeaderProps) => {
               </Link>
             </>
           )}
-          <Link to="/about" className="transition-colors hover:text-primary">
-            About
-          </Link>
-          <Link to="/contact" className="transition-colors hover:text-primary">
-            Contact
-          </Link>
-          <Link to="/help" className="transition-colors hover:text-primary">
-            FAQ's
-          </Link>
+          {!user && (
+            <>
+              <Link to="/about" className="transition-colors hover:text-primary">
+                About
+              </Link>
+              <Link to="/contact" className="transition-colors hover:text-primary">
+                Contact
+              </Link>
+              <Link to="/help" className="transition-colors hover:text-primary">
+                FAQ's
+              </Link>
+            </>
+          )}
         </nav>
 
         {/* User Actions */}
