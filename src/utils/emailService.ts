@@ -14,7 +14,7 @@ export const sendVerificationEmail = async ({
   fullName = 'User'
 }: SendVerificationEmailParams): Promise<{ success: boolean; error?: string }> => {
   try {
-    const verificationUrl = `${window.location.origin}/verify-email?token=${token}`;
+    const verificationUrl = `https://mustudyhub.vercel.app/verify-email?token=${token}`;
     
     const { error } = await resend.emails.send({
       from: 'onboarding@resend.dev', // Replace with your domain once verified
