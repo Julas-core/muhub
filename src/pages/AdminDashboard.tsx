@@ -393,6 +393,40 @@ const AdminDashboard = () => {
     return material.uploaded_by || 'Unknown';
   };
 
+  const handleRevokeAdmin = async (userId: string, userEmail: string | null) => {
+    if (!window.confirm(`Are you sure you want to remove admin access from this user?`)) {
+      return;
+    }
+
+    try {
+      // Delete the admin role from user_roles
+      const { error } = await supabase
+        .from('user_roles')
+        .delete()
+        .eq('user_id', userId)
+        .eq('role', 'admin');
+
+      if (error) {
+        throw error;
+      }
+
+      toast({
+        title: "Admin access revoked",
+        description: "User no longer has admin privileges.",
+      });
+
+      // Refresh data to update the UI
+      await fetchData();
+    } catch (error) {
+      console.error('Error revoking admin access:', error);
+      toast({
+        title: "Error",
+        description: "Failed to revoke admin access. Please try again.",
+        variant: "destructive",
+      });
+    }
+  };
+
   const sendAdminNotificationEmail = async (email: string) => {
     try {
       // In a real implementation, this would call a backend function to send an email
@@ -689,8 +723,17 @@ const AdminDashboard = () => {
                                 Grant Admin
                               </Button>
                             )}
-                            {userItem.is_admin && (
-                              <span className="text-sm text-muted-foreground">Admin</span>
+                            {userItem.id !== user?.id && userItem.is_admin && (
+                              <Button 
+                                size="sm" 
+                                variant="destructive" 
+                                onClick={() => handleRevokeAdmin(userItem.id, userItem.email || '')}
+                              >
+                                Remove Admin
+                              </Button>
+                            )}
+                            {userItem.id === user?.id && userItem.is_admin && (
+                              <span className="text-sm text-muted-foreground">You</span>
                             )}
                           </td>
                         </tr>
