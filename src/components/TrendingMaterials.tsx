@@ -4,12 +4,14 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { MaterialCard } from './MaterialCard';
 import { Skeleton } from '@/components/ui/skeleton';
 import { Button } from './ui/button';
-import { ChevronLeft, ChevronRight } from 'lucide-react';
+import { ChevronLeft, ChevronRight, ChevronDown } from 'lucide-react';
 import { useAuth } from '@/hooks/useAuth';
+import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible';
 
 export const TrendingMaterials = () => {
   const [materials, setMaterials] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
+  const [isOpen, setIsOpen] = useState(false);
   const { user } = useAuth();
   const containerRef = useRef<HTMLDivElement>(null);
 
@@ -59,13 +61,13 @@ export const TrendingMaterials = () => {
 
   if (loading) {
     return (
-      <Card>
-        <CardHeader>
-          <CardTitle>🔥 Trending This Week</CardTitle>
-          <CardDescription>Most downloaded materials</CardDescription>
-        </CardHeader>
-        <CardContent>
-          <div className="relative">
+      <Collapsible open={isOpen} onOpenChange={setIsOpen}>
+        <CollapsibleTrigger className="flex items-center gap-2 text-xl font-bold hover:text-primary transition-colors w-full">
+          <ChevronDown className={`h-5 w-5 transition-transform ${isOpen ? 'rotate-180' : ''}`} />
+          🔥 Trending This Week
+        </CollapsibleTrigger>
+        <CollapsibleContent>
+          <div className="relative mt-4">
             <div className="flex overflow-x-auto space-x-4 pb-4 hide-scrollbar" ref={containerRef}>
               {[1, 2, 3, 4, 5].map((i) => (
                 <div key={i} className="flex-shrink-0 w-72">
@@ -73,27 +75,9 @@ export const TrendingMaterials = () => {
                 </div>
               ))}
             </div>
-            <Button
-              variant="outline"
-              size="icon"
-              className="absolute top-1/2 -right-3 transform -translate-y-1/2 rounded-full h-8 w-8"
-              onClick={scrollRight}
-              aria-label="Scroll right"
-            >
-              <ChevronRight className="h-4 w-4" />
-            </Button>
-            <Button
-              variant="outline"
-              size="icon"
-              className="absolute top-1/2 -left-3 transform -translate-y-1/2 rounded-full h-8 w-8"
-              onClick={scrollLeft}
-              aria-label="Scroll left"
-            >
-              <ChevronLeft className="h-4 w-4" />
-            </Button>
           </div>
-        </CardContent>
-      </Card>
+        </CollapsibleContent>
+      </Collapsible>
     );
   }
 
@@ -102,13 +86,13 @@ export const TrendingMaterials = () => {
   }
 
   return (
-    <Card>
-      <CardHeader>
-        <CardTitle>🔥 Trending This Week</CardTitle>
-        <CardDescription>Most downloaded materials in the last 7 days</CardDescription>
-      </CardHeader>
-      <CardContent>
-        <div className="relative">
+    <Collapsible open={isOpen} onOpenChange={setIsOpen}>
+      <CollapsibleTrigger className="flex items-center gap-2 text-xl font-bold hover:text-primary transition-colors w-full">
+        <ChevronDown className={`h-5 w-5 transition-transform ${isOpen ? 'rotate-180' : ''}`} />
+        🔥 Trending This Week
+      </CollapsibleTrigger>
+      <CollapsibleContent>
+        <div className="relative mt-4">
           <div className="flex overflow-x-auto space-x-4 pb-4 hide-scrollbar" ref={containerRef}>
             {materials.map((material) => (
               <div key={material.id} className="flex-shrink-0 w-72">
@@ -116,7 +100,7 @@ export const TrendingMaterials = () => {
               </div>
             ))}
           </div>
-          {materials.length > 2 && ( // Only show controls if there are multiple items
+          {materials.length > 2 && (
             <>
               <Button
                 variant="outline"
@@ -139,7 +123,7 @@ export const TrendingMaterials = () => {
             </>
           )}
         </div>
-      </CardContent>
-    </Card>
+      </CollapsibleContent>
+    </Collapsible>
   );
 };
