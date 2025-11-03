@@ -8,6 +8,7 @@ import { TrendingMaterials } from "@/components/TrendingMaterials";
 import { MaterialRequestForm } from "@/components/MaterialRequestForm";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useAuth } from "@/hooks/useAuth";
+import { SEOHead } from "@/components/SEOHead";
 
 const Index = () => {
   const [searchQuery, setSearchQuery] = useState("");
@@ -17,6 +18,7 @@ const Index = () => {
 
   return (
     <div className="min-h-screen bg-background">
+      <SEOHead />
       <Hero onSearch={setSearchQuery} />
       
       <div className="container mx-auto px-4 py-4 flex justify-end">

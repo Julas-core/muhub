@@ -43,7 +43,12 @@ const Header = ({ avatarUrl }: HeaderProps) => {
         {/* Logo and University Name */}
         <Link to="/" aria-label="MUStudy-HUB Home">
         <div className="flex items-center gap-3">
-          <img src={StudyHubLogo} alt="Mekelle University Logo" className="h-10 object-contain" aria-label="Mekelle University Logo" />
+          <img 
+            src={StudyHubLogo} 
+            alt="Mekelle University Logo" 
+            className="h-10 object-contain transition-all dark:brightness-125 dark:contrast-125 dark:saturate-150" 
+            aria-label="Mekelle University Logo" 
+          />
         </div>
         </Link>
         {/* Navigation Links */}

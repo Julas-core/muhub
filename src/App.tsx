@@ -14,6 +14,7 @@ import MuslimNameDetectionWrapper from "./components/MuslimNameDetectionWrapper"
 import { useAuth } from '@/hooks/useAuth';
 import FirstTimeUploadModal from './components/FirstTimeUploadModal';
 import { ThemeProvider } from "./components/ThemeProvider";
+import { Breadcrumbs } from "./components/Breadcrumbs";
 import Index from "./pages/Index";
 import Auth from "./pages/Auth";
 import Upload from "./pages/Upload";
@@ -36,6 +37,9 @@ import Forum from "./pages/Forum";
 import ForumQuestion from "./pages/ForumQuestion";
 import AIAssistant from "./pages/AIAssistant";
 import Notes from "./pages/Notes";
+
+const Disclaimer = lazy(() => import("./pages/Disclaimer"));
+const CookiePolicy = lazy(() => import("./pages/CookiePolicy"));
 
 const queryClient = new QueryClient();
 
@@ -123,6 +127,7 @@ function App() {
                 <AnalyticsWrapper>
                   <div className="flex flex-col min-h-screen">
                     <Header avatarUrl={avatarUrl} />
+                    <Breadcrumbs />
                     <main className="flex-grow">
                       <Routes>
                       <Route path="/" element={<Index />} />
@@ -135,8 +140,10 @@ function App() {
                       <Route path="/help" element={<Help />} />
                       <Route path="/profile" element={<Profile />} />
                       <Route path="/terms" element={<Terms />} />
-                      <Route path="/privacy" element={<Privacy />} />
-                      <Route path="/admin" element={<AdminDashboard />} />
+                       <Route path="/privacy" element={<Privacy />} />
+                       <Route path="/disclaimer" element={<Suspense fallback={<div>Loading...</div>}><Disclaimer /></Suspense>} />
+                       <Route path="/cookie-policy" element={<Suspense fallback={<div>Loading...</div>}><CookiePolicy /></Suspense>} />
+                       <Route path="/admin" element={<AdminDashboard />} />
                       <Route path="/dashboard" element={<Dashboard />} />
                       <Route path="/study-groups" element={<StudyGroups />} />
                       <Route path="/material/:id" element={<MaterialDetail />} />

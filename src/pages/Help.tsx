@@ -80,6 +80,75 @@ const Help = () => {
                       </p>
                     </AccordionContent>
                   </AccordionItem>
+                  
+                  <AccordionItem value="item-7">
+                    <AccordionTrigger>How do I earn points and badges?</AccordionTrigger>
+                    <AccordionContent>
+                      <p>
+                        You can earn points by contributing to the platform: uploading quality materials (+50 points), 
+                        receiving ratings on your uploads, helping other students find resources, and maintaining an 
+                        active study streak. Points unlock badges and recognition on our leaderboard. Visit your profile 
+                        to see your current points and earned badges.
+                      </p>
+                    </AccordionContent>
+                  </AccordionItem>
+                  
+                  <AccordionItem value="item-8">
+                    <AccordionTrigger>Can I download materials for offline use?</AccordionTrigger>
+                    <AccordionContent>
+                      <p>
+                        Yes! Most materials on the platform can be downloaded for offline viewing. Simply click the 
+                        download button on any material card. Please respect copyright and intellectual property rights 
+                        - downloaded materials are for personal educational use only and should not be redistributed.
+                      </p>
+                    </AccordionContent>
+                  </AccordionItem>
+                  
+                  <AccordionItem value="item-9">
+                    <AccordionTrigger>How does the bookmark feature work?</AccordionTrigger>
+                    <AccordionContent>
+                      <p>
+                        The bookmark feature allows you to save materials for quick access later. Click the bookmark 
+                        icon on any material card to add it to your bookmarks. You can view all your bookmarked materials 
+                        in your dashboard. This is perfect for organizing materials you'll need for upcoming exams or assignments.
+                      </p>
+                    </AccordionContent>
+                  </AccordionItem>
+                  
+                  <AccordionItem value="item-10">
+                    <AccordionTrigger>What should I do if I find duplicate or inappropriate content?</AccordionTrigger>
+                    <AccordionContent>
+                      <p>
+                        If you encounter duplicate materials, outdated content, or anything that violates our community 
+                        guidelines, please use the report feature on the material page. Our moderation team reviews all 
+                        reports promptly. You can also contact us through the contact page with detailed information about 
+                        the issue.
+                      </p>
+                    </AccordionContent>
+                  </AccordionItem>
+                  
+                  <AccordionItem value="item-11">
+                    <AccordionTrigger>How can I contribute as a verified uploader?</AccordionTrigger>
+                    <AccordionContent>
+                      <p>
+                        To become a verified uploader and contribute materials, you need to build a positive contribution 
+                        history on the platform. Start by uploading quality materials - they will be reviewed by our team. 
+                        Consistently uploading accurate, well-organized materials can lead to verified status, which gives 
+                        you priority in uploads and additional recognition.
+                      </p>
+                    </AccordionContent>
+                  </AccordionItem>
+                  
+                  <AccordionItem value="item-12">
+                    <AccordionTrigger>Is there a mobile app available?</AccordionTrigger>
+                    <AccordionContent>
+                      <p>
+                        Currently, MUStudy-HUB is optimized as a responsive web application that works seamlessly on all 
+                        devices including smartphones and tablets. You can access the full functionality through your mobile 
+                        browser. A dedicated mobile app is in our development roadmap based on community feedback.
+                      </p>
+                    </AccordionContent>
+                  </AccordionItem>
                 </Accordion>
               </section>
               
