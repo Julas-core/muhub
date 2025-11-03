@@ -13,6 +13,7 @@ import { supabase } from "@/integrations/supabase/client";
 import MuslimNameDetectionWrapper from "./components/MuslimNameDetectionWrapper";
 import { useAuth } from '@/hooks/useAuth';
 import FirstTimeUploadModal from './components/FirstTimeUploadModal';
+import { ThemeProvider } from "./components/ThemeProvider";
 import Index from "./pages/Index";
 import Auth from "./pages/Auth";
 import Upload from "./pages/Upload";
@@ -113,16 +114,17 @@ function App() {
   return (
     <>
       <QueryClientProvider client={queryClient}>
-        <TooltipProvider>
-          <Toaster />
-          <Sonner />
-          <BrowserRouter>
-            <ErrorBoundary>
-              <AnalyticsWrapper>
-                <div className="flex flex-col min-h-screen">
-                  <Header avatarUrl={avatarUrl} />
-                  <main className="flex-grow">
-                    <Routes>
+        <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
+          <TooltipProvider>
+            <Toaster />
+            <Sonner />
+            <BrowserRouter>
+              <ErrorBoundary>
+                <AnalyticsWrapper>
+                  <div className="flex flex-col min-h-screen">
+                    <Header avatarUrl={avatarUrl} />
+                    <main className="flex-grow">
+                      <Routes>
                       <Route path="/" element={<Index />} />
                       <Route path="/auth" element={<Auth />} />
                       <Route path="/register" element={<RegisterPage />} />
@@ -160,6 +162,7 @@ function App() {
             </ErrorBoundary>
           </BrowserRouter>
         </TooltipProvider>
+      </ThemeProvider>
       </QueryClientProvider>
     </>
   );

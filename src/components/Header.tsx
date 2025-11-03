@@ -7,6 +7,7 @@ import { UserPointsBadge } from "./UserPointsBadge";
 import { StudyStreak } from "./StudyStreak";
 import { NotificationBell } from "./NotificationBell";
 import { HoverCard, HoverCardContent, HoverCardTrigger } from "@/components/ui/hover-card";
+import { ThemeToggle } from "./ThemeToggle";
 // Use Vite-compatible URL import for static asset (SVG) to avoid runtime import issues
 const StudyHubLogo = new URL('../assets/MuStudyHubv4..svg', import.meta.url).href;
 
@@ -93,7 +94,9 @@ const Header = ({ avatarUrl }: HeaderProps) => {
         {/* User Actions */}
         <div className="flex items-center gap-2">
           {user ? (
-            <HoverCard openDelay={200}>
+            <>
+              <ThemeToggle />
+              <HoverCard openDelay={200}>
               <HoverCardTrigger asChild>
                 <button
                   className="inline-flex items-center justify-center rounded-md h-10 w-10 overflow-hidden hover:opacity-80 transition-opacity"
@@ -161,12 +164,16 @@ const Header = ({ avatarUrl }: HeaderProps) => {
                 </div>
               </HoverCardContent>
             </HoverCard>
+            </>
           ) : (
-            <Link to="/auth" aria-label="Sign in to your account">
-              <Button variant="outline" size="sm">
-                Sign In
-              </Button>
-            </Link>
+            <>
+              <ThemeToggle />
+              <Link to="/auth" aria-label="Sign in to your account">
+                <Button variant="outline" size="sm">
+                  Sign In
+                </Button>
+              </Link>
+            </>
           )}
         </div>
       </div>
