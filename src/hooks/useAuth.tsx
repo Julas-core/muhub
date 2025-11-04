@@ -53,7 +53,7 @@ export const useAuth = () => {
   }, []);
 
   const signUp = async (email: string, password: string, fullName: string) => {
-    const redirectUrl = `${window.location.origin}/`;
+    const redirectUrl = 'https://mustudyhub.vercel.app/';
     
     const { error } = await supabase.auth.signUp({
       email,
@@ -63,6 +63,16 @@ export const useAuth = () => {
         data: {
           full_name: fullName,
         }
+      }
+    });
+    return { error };
+  };
+
+  const signInWithGoogle = async () => {
+    const { error } = await supabase.auth.signInWithOAuth({
+      provider: 'google',
+      options: {
+        redirectTo: 'https://mustudyhub.vercel.app/'
       }
     });
     return { error };
@@ -94,5 +104,6 @@ export const useAuth = () => {
     signUp,
     signIn,
     signOut,
+    signInWithGoogle,
   };
 };
