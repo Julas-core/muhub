@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { FileText, Download, Calendar, User, Bookmark, Eye } from "lucide-react";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -46,6 +47,7 @@ const typeColors = {
 export const MaterialCard = ({ material }: MaterialCardProps) => {
   const { toast } = useToast();
   const { user } = useAuth();
+  const navigate = useNavigate();
   const [uploaderLabel, setUploaderLabel] = useState<string>(material.uploaded_by || 'Unknown');
   
   // Phase 1 features
@@ -174,18 +176,23 @@ export const MaterialCard = ({ material }: MaterialCardProps) => {
     });
   };
 
+  const handleCardClick = () => {
+    navigate(`/material/${material.id}`);
+  };
+
   const handleKeyDown = (e: React.KeyboardEvent) => {
     if (e.key === 'Enter' || e.key === ' ') {
       e.preventDefault();
-      handleDownload();
+      navigate(`/material/${material.id}`);
     }
   };
 
   return (
     <Card 
-      className="group hover:shadow-lg transition-all duration-300 border-border focus:outline-none focus:ring-2 focus:ring-primary/50"
+      className="group hover:shadow-lg transition-all duration-300 border-border focus:outline-none focus:ring-2 focus:ring-primary/50 cursor-pointer"
       tabIndex={0}
       onKeyDown={handleKeyDown}
+      onClick={handleCardClick}
       role="article"
       aria-labelledby={`material-title-${material.id}`}
       aria-describedby={`material-description-${material.id}`}
@@ -283,7 +290,10 @@ export const MaterialCard = ({ material }: MaterialCardProps) => {
       </CardContent>
       <CardFooter>
         <Button 
-          onClick={handleDownload} 
+          onClick={(e) => {
+            e.stopPropagation();
+            handleDownload();
+          }} 
           className="w-full gap-2 bg-primary hover:bg-primary/90" 
           aria-label={`Download ${material.title}`}
         >
