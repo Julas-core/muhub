@@ -2,8 +2,9 @@ import { useEffect, useState, useRef } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { MaterialCard, Material } from './MaterialCard';
 import { Button } from './ui/button';
-import { ChevronLeft, ChevronRight, ChevronDown } from 'lucide-react';
+import { ChevronLeft, ChevronRight, ChevronDown, Clock } from 'lucide-react';
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible';
+import { formatDistanceToNow } from 'date-fns';
 
 interface RecentlyViewedSectionProps {
   userId: string | undefined;
@@ -15,6 +16,8 @@ export const RecentlyViewedSection = ({ userId }: RecentlyViewedSectionProps) =>
   const [isOpen, setIsOpen] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
 
+  const [viewTimestamps, setViewTimestamps] = useState<Record<string, string>>({});
+
   useEffect(() => {
     if (!userId) {
       setLoading(false);
@@ -22,7 +25,7 @@ export const RecentlyViewedSection = ({ userId }: RecentlyViewedSectionProps) =>
     }
 
     const fetchRecentlyViewed = async () => {
-      // Get last 5 unique recently viewed materials
+      // Get last 5 unique recently viewed materials with timestamps
       const { data: recentViews } = await supabase
         .from('recently_viewed')
         .select('material_id, viewed_at')
@@ -31,8 +34,20 @@ export const RecentlyViewedSection = ({ userId }: RecentlyViewedSectionProps) =>
         .limit(20);
 
       if (recentViews && recentViews.length > 0) {
-        // Get unique material IDs (most recent first)
-        const uniqueMaterialIds = [...new Set(recentViews.map(v => v.material_id))].slice(0, 5);
+        // Get unique material IDs (most recent first) and store their timestamps
+        const uniqueViews = new Map<string, string>();
+        recentViews.forEach(v => {
+          if (!uniqueViews.has(v.material_id)) {
+            uniqueViews.set(v.material_id, v.viewed_at);
+          }
+        });
+        
+        const uniqueMaterialIds = Array.from(uniqueViews.keys()).slice(0, 5);
+        const timestamps: Record<string, string> = {};
+        uniqueMaterialIds.forEach(id => {
+          timestamps[id] = uniqueViews.get(id) || '';
+        });
+        setViewTimestamps(timestamps);
 
         // Fetch material details
         const { data: materialsData } = await supabase
@@ -104,7 +119,17 @@ export const RecentlyViewedSection = ({ userId }: RecentlyViewedSectionProps) =>
           <div className="flex overflow-x-auto space-x-4 pb-4 hide-scrollbar" ref={containerRef}>
             {materials.map((material) => (
               <div key={material.id} className="flex-shrink-0 w-72">
-                <MaterialCard material={material} />
+                <div className="space-y-2">
+                  <MaterialCard material={material} />
+                  {viewTimestamps[material.id] && (
+                    <div className="flex items-center gap-1 text-xs text-muted-foreground px-2">
+                      <Clock className="h-3 w-3" />
+                      <span>
+                        Viewed {formatDistanceToNow(new Date(viewTimestamps[material.id]), { addSuffix: true })}
+                      </span>
+                    </div>
+                  )}
+                </div>
               </div>
             ))}
           </div>

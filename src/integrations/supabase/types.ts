@@ -337,6 +337,47 @@ export type Database = {
           },
         ]
       }
+      material_reports: {
+        Row: {
+          created_at: string
+          description: string | null
+          id: string
+          material_id: string
+          reason: string
+          reporter_user_id: string
+          status: string
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          description?: string | null
+          id?: string
+          material_id: string
+          reason: string
+          reporter_user_id: string
+          status?: string
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          description?: string | null
+          id?: string
+          material_id?: string
+          reason?: string
+          reporter_user_id?: string
+          status?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "material_reports_material_id_fkey"
+            columns: ["material_id"]
+            isOneToOne: false
+            referencedRelation: "materials"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       material_requests: {
         Row: {
           course: string

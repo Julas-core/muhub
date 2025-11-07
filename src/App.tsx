@@ -37,6 +37,7 @@ import Forum from "./pages/Forum";
 import ForumQuestion from "./pages/ForumQuestion";
 import AIAssistant from "./pages/AIAssistant";
 import Notes from "./pages/Notes";
+import UploaderMaterials from "./pages/UploaderMaterials";
 
 const Disclaimer = lazy(() => import("./pages/Disclaimer"));
 const CookiePolicy = lazy(() => import("./pages/CookiePolicy"));
@@ -150,10 +151,11 @@ function App() {
                       <Route path="/leaderboard" element={<Leaderboard />} />
                       <Route path="/exam-prep" element={<ExamPrep />} />
                       <Route path="/forum" element={<Forum />} />
-                      <Route path="/forum/:id" element={<ForumQuestion />} />
-                      <Route path="/ai-assistant" element={<AIAssistant />} />
-                      <Route path="/notes" element={<Notes />} />
-                      <Route path="*" element={<NotFound />} />
+                       <Route path="/forum/:id" element={<ForumQuestion />} />
+                       <Route path="/ai-assistant" element={<AIAssistant />} />
+                       <Route path="/notes" element={<Notes />} />
+                       <Route path="/uploader/:userId" element={<UploaderMaterials />} />
+                       <Route path="*" element={<NotFound />} />
                     </Routes>
                   </main>
                   <Footer />

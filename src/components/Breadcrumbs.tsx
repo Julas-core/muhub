@@ -1,9 +1,31 @@
-import { Link, useLocation } from "react-router-dom";
+import { Link, useLocation, useParams } from "react-router-dom";
 import { ChevronRight, Home } from "lucide-react";
+import { useEffect, useState } from "react";
+import { supabase } from "@/integrations/supabase/client";
 
 export const Breadcrumbs = () => {
   const location = useLocation();
+  const params = useParams();
   const pathnames = location.pathname.split("/").filter((x) => x);
+  const [materialName, setMaterialName] = useState<string>("");
+
+  useEffect(() => {
+    // Fetch material name if we're on a material detail page
+    if (pathnames[0] === "material" && params.id) {
+      const fetchMaterialName = async () => {
+        const { data } = await supabase
+          .from("materials")
+          .select("title")
+          .eq("id", params.id)
+          .single();
+        
+        if (data?.title) {
+          setMaterialName(data.title);
+        }
+      };
+      fetchMaterialName();
+    }
+  }, [params.id, pathnames]);
 
   // Don't show breadcrumbs on home page
   if (location.pathname === "/") return null;
@@ -45,7 +67,12 @@ export const Breadcrumbs = () => {
           {pathnames.map((name, index) => {
             const routeTo = `/${pathnames.slice(0, index + 1).join("/")}`;
             const isLast = index === pathnames.length - 1;
-            const breadcrumbName = breadcrumbNameMap[name] || name.charAt(0).toUpperCase() + name.slice(1);
+            
+            // Use material name if available, otherwise use default mapping
+            let breadcrumbName = breadcrumbNameMap[name] || name.charAt(0).toUpperCase() + name.slice(1);
+            if (pathnames[0] === "material" && index === 1 && materialName) {
+              breadcrumbName = materialName;
+            }
 
             return (
               <li key={name} className="flex items-center gap-2">

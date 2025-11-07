@@ -1,4 +1,4 @@
-import { useParams, useNavigate } from 'react-router-dom';
+import { useParams, useNavigate, Link } from 'react-router-dom';
 import { useState, useEffect } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { CommentsSection } from '@/components/CommentsSection';
@@ -10,7 +10,7 @@ import { Badge } from '@/components/ui/badge';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Separator } from '@/components/ui/separator';
-import { ArrowLeft, Download, Calendar, User, FileText, Eye, Bookmark, Upload, Award } from 'lucide-react';
+import { ArrowLeft, Download, Calendar, User, FileText, Eye, Bookmark, Upload, Award, ExternalLink } from 'lucide-react';
 import { Skeleton } from '@/components/ui/skeleton';
 import { useAuth } from '@/hooks/useAuth';
 import { useBookmarks } from '@/hooks/useBookmarks';
@@ -20,6 +20,7 @@ import { StarRating } from '@/components/StarRating';
 import { useToast } from '@/hooks/use-toast';
 import { trackDownload } from '@/hooks/useAnalytics';
 import { cn } from '@/lib/utils';
+import { ReportMaterialDialog } from '@/components/ReportMaterialDialog';
 
 const MaterialDetail = () => {
   const { id } = useParams();
@@ -318,6 +319,20 @@ const MaterialDetail = () => {
 
                 <Separator />
 
+                {/* PDF Preview */}
+                {material.file_type.toLowerCase() === 'pdf' && (
+                  <div className="space-y-3">
+                    <h3 className="text-lg font-semibold">Preview</h3>
+                    <div className="border rounded-lg overflow-hidden bg-muted/30">
+                      <iframe
+                        src={`${import.meta.env.VITE_SUPABASE_URL}/storage/v1/object/public/course-materials/${material.file_path}`}
+                        className="w-full h-96"
+                        title="PDF Preview"
+                      />
+                    </div>
+                  </div>
+                )}
+
                 {/* Download Button */}
                 <Button 
                   onClick={handleDownload}
@@ -367,21 +382,35 @@ const MaterialDetail = () => {
                       <span className="font-semibold">{uploaderStats.points}</span>
                     </div>
                   </div>
+
+                  <Separator />
+                  
+                  <Link to={`/uploader/${material.uploaded_by_user_id}`}>
+                    <Button variant="outline" className="w-full">
+                      <ExternalLink className="h-4 w-4 mr-2" />
+                      View All Materials
+                    </Button>
+                  </Link>
                 </CardContent>
               </Card>
             )}
 
-            {/* Social Share */}
+            {/* Report & Share */}
             <Card>
               <CardHeader>
-                <CardTitle className="text-lg">Share</CardTitle>
+                <CardTitle className="text-lg">Actions</CardTitle>
               </CardHeader>
-              <CardContent>
-                <SocialShare 
-                  url={window.location.href}
-                  title={material.title}
-                  description={material.description || ''}
-                />
+              <CardContent className="space-y-3">
+                <ReportMaterialDialog materialId={material.id} />
+                <Separator />
+                <div>
+                  <p className="text-sm font-medium mb-2">Share</p>
+                  <SocialShare 
+                    url={window.location.href}
+                    title={material.title}
+                    description={material.description || ''}
+                  />
+                </div>
               </CardContent>
             </Card>
           </div>
