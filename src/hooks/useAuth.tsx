@@ -20,7 +20,26 @@ export const useAuth = () => {
   };
 
   useEffect(() => {
-    // Check for existing session FIRST
+    // Set up auth state listener FIRST (critical for OAuth callbacks)
+    const { data: { subscription } } = supabase.auth.onAuthStateChange(
+      async (event, session) => {
+        console.log('Auth state changed:', event, { hasSession: !!session, userId: session?.user?.id });
+        setSession(session);
+        setUser(session?.user ?? null);
+        
+        // Check admin status using database
+        if (session?.user?.id) {
+          await checkAdminStatus(session.user.id);
+        } else {
+          setIsAdmin(false);
+        }
+        
+        // Set loading to false after auth state is processed
+        setLoading(false);
+      }
+    );
+
+    // Then check for existing session
     supabase.auth.getSession().then(async ({ data: { session } }) => {
       console.log('Initial session check:', { hasSession: !!session, userId: session?.user?.id });
       setSession(session);
@@ -30,24 +49,6 @@ export const useAuth = () => {
       }
       setLoading(false);
     });
-
-    // Set up auth state listener
-    const { data: { subscription } } = supabase.auth.onAuthStateChange(
-      (event, session) => {
-        console.log('Auth state changed:', event, { hasSession: !!session, userId: session?.user?.id });
-        setSession(session);
-        setUser(session?.user ?? null);
-        
-        // Check admin status using database
-        if (session?.user?.id) {
-          setTimeout(() => {
-            checkAdminStatus(session.user.id);
-          }, 0);
-        } else {
-          setIsAdmin(false);
-        }
-      }
-    );
 
     return () => subscription.unsubscribe();
   }, []);
@@ -72,7 +73,7 @@ export const useAuth = () => {
     const { error } = await supabase.auth.signInWithOAuth({
       provider: 'google',
       options: {
-        redirectTo: 'https://mustudyhub.vercel.app/'
+        redirectTo: 'https://mustudyhub.vercel.app'
       }
     });
     return { error };
