@@ -31,6 +31,7 @@ const MaterialDetail = () => {
   const [loading, setLoading] = useState(true);
   const [uploaderInfo, setUploaderInfo] = useState<any>(null);
   const [uploaderStats, setUploaderStats] = useState({ uploads: 0, points: 0 });
+  const [previewUrl, setPreviewUrl] = useState<string | null>(null);
 
   const { bookmarks, toggleBookmark } = useBookmarks(user?.id);
   const { stats, userRating, submitRating } = useRatings(id || '', user?.id);
@@ -113,6 +114,25 @@ const MaterialDetail = () => {
 
     fetchMaterial();
   }, [id]);
+
+  // Generate signed URL for PDF preview for authenticated users only
+  useEffect(() => {
+    const gen = async () => {
+      if (!user || !material?.file_path || String(material.file_type || '').toLowerCase() !== 'pdf') {
+        setPreviewUrl(null);
+        return;
+      }
+      const { data, error } = await supabase.storage
+        .from('course-materials')
+        .createSignedUrl(material.file_path, 3600);
+      if (!error && data?.signedUrl) {
+        setPreviewUrl(data.signedUrl);
+      } else {
+        setPreviewUrl(null);
+      }
+    };
+    gen();
+  }, [user, material?.file_path, material?.file_type]);
 
   const handleDownload = async () => {
     if (!material) return;
@@ -495,13 +515,24 @@ const MaterialDetail = () => {
                 {material.file_type.toLowerCase() === 'pdf' && (
                   <div className="space-y-3">
                     <h3 className="text-lg font-semibold">Preview</h3>
-                    <div className="border rounded-lg overflow-hidden bg-muted/30">
-                      <iframe
-                        src={`${import.meta.env.VITE_SUPABASE_URL}/storage/v1/object/public/course-materials/${material.file_path}`}
-                        className="w-full h-96"
-                        title="PDF Preview"
-                      />
-                    </div>
+                    {!user ? (
+                      <div className="border rounded-lg p-4 bg-muted/30 text-sm text-muted-foreground">
+                        Sign in to preview this PDF in your browser. Download is available below.
+                      </div>
+                    ) : previewUrl ? (
+                      <div className="border rounded-lg overflow-hidden bg-muted/30">
+                        <iframe
+                          src={previewUrl}
+                          className="w-full h-96"
+                          title="PDF Preview"
+                          loading="lazy"
+                        />
+                      </div>
+                    ) : (
+                      <div className="border rounded-lg p-4 bg-muted/30 text-sm text-muted-foreground">
+                        Generating secure preview link...
+                      </div>
+                    )}
                   </div>
                 )}
 
