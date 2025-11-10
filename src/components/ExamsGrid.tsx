@@ -2,10 +2,7 @@ import { useEffect, useState } from "react";
 import { MaterialCard, Material } from "./MaterialCard";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
-import { useAuth } from "@/hooks/useAuth";
-import { useNavigate } from "react-router-dom";
-import { Lock, FileText } from "lucide-react";
-import { Button } from "./ui/button";
+import { FileText } from "lucide-react";
 import { Pagination, PaginationContent, PaginationItem, PaginationLink, PaginationNext, PaginationPrevious } from "@/components/ui/pagination";
 import { MEKELLE_UNIVERSITY_SCHOOLS } from "@/constants/colleges";
 
@@ -22,14 +19,10 @@ export const ExamsGrid = ({ searchQuery, selectedSchool, selectedDepartment = "a
   const [currentPage, setCurrentPage] = useState(1);
   const ITEMS_PER_PAGE = 9;
   const { toast } = useToast();
-  const { user } = useAuth();
-  const navigate = useNavigate();
 
   useEffect(() => {
-    if (user) {
-      fetchExams();
-    }
-  }, [user]);
+    fetchExams();
+  }, []);
 
   useEffect(() => {
     setCurrentPage(1);
@@ -92,25 +85,6 @@ export const ExamsGrid = ({ searchQuery, selectedSchool, selectedDepartment = "a
   const current = Math.min(currentPage, totalPages);
   const startIdx = (current - 1) * ITEMS_PER_PAGE;
   const paginatedExams = filteredExams.slice(startIdx, startIdx + ITEMS_PER_PAGE);
-
-  if (!user) {
-    return (
-      <section className="py-12 bg-background" aria-label="Sign in required">
-        <div className="container px-4">
-          <div className="flex flex-col items-center justify-center min-h-[400px] space-y-4 text-center">
-            <Lock className="h-16 w-16 text-muted-foreground" />
-            <h3 className="text-2xl font-semibold">Sign in required</h3>
-            <p className="text-muted-foreground max-w-md">
-              Please sign in to view and access past exams
-            </p>
-            <Button onClick={() => navigate('/auth')} size="lg">
-              Sign In
-            </Button>
-          </div>
-        </div>
-      </section>
-    );
-  }
 
   if (loading) {
     return (

@@ -187,15 +187,21 @@ export const MaterialCard = ({ material }: MaterialCardProps) => {
     }
   };
 
+  const canOpen = !!user;
+
   return (
     <Card 
-      className="group hover:shadow-lg transition-all duration-300 border-border focus:outline-none focus:ring-2 focus:ring-primary/50 cursor-pointer"
-      tabIndex={0}
-      onKeyDown={handleKeyDown}
-      onClick={handleCardClick}
+      className={cn(
+        "group hover:shadow-lg transition-all duration-300 border-border focus:outline-none focus:ring-2 focus:ring-primary/50",
+        canOpen ? "cursor-pointer" : "cursor-default"
+      )}
+      tabIndex={canOpen ? 0 : undefined}
+      onKeyDown={canOpen ? handleKeyDown : undefined}
+      onClick={canOpen ? handleCardClick : undefined}
       role="article"
       aria-labelledby={`material-title-${material.id}`}
       aria-describedby={`material-description-${material.id}`}
+      title={!canOpen ? "Sign in to view details" : undefined}
     >
       <CardHeader>
         <div className="flex items-start justify-between gap-2 mb-2">
@@ -219,6 +225,8 @@ export const MaterialCard = ({ material }: MaterialCardProps) => {
             }}
             className={cn("h-8 w-8 p-0", isBookmarked && "text-primary")}
             aria-label={isBookmarked ? "Remove bookmark" : "Add bookmark"}
+            disabled={!user}
+            title={!user ? "Sign in to bookmark" : undefined}
           >
             <Bookmark className={cn("h-4 w-4", isBookmarked && "fill-current")} />
           </Button>
