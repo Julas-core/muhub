@@ -97,18 +97,6 @@ const ExamPrep = () => {
     return <Circle className="h-5 w-5 text-muted-foreground" />;
   };
 
-  if (!user) {
-    return (
-      <div className="container mx-auto px-4 py-8">
-        <Card>
-          <CardContent className="py-8 text-center">
-            <p className="text-muted-foreground">Please sign in to use Exam Prep Tracker</p>
-          </CardContent>
-        </Card>
-      </div>
-    );
-  }
-
   return (
     <div className="container mx-auto px-4 py-8">
       <div className="max-w-4xl mx-auto">

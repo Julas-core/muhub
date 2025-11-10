@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -21,6 +21,8 @@ const Auth = () => {
   const { signIn, signUp, signInWithGoogle, user } = useAuth();
   const { toast } = useToast();
   const navigate = useNavigate();
+  const location = useLocation();
+  const returnUrl = (location.state as any)?.returnUrl || '/';
 
   useEffect(() => {
     if (user) {
@@ -40,7 +42,7 @@ const Auth = () => {
     if (!profile?.department || !profile?.student_id) {
       setShowProfileModal(true);
     } else {
-      navigate('/');
+      navigate(returnUrl);
     }
   };
 
@@ -57,7 +59,7 @@ const Auth = () => {
           title: 'Welcome back!',
           description: 'You have successfully signed in.',
         });
-        navigate('/');
+        navigate(returnUrl);
       } else {
         const { error } = await signUp(email, password, fullName);
         if (error) throw error;
@@ -219,7 +221,7 @@ const Auth = () => {
           open={showProfileModal}
           onClose={() => {
             setShowProfileModal(false);
-            navigate('/');
+            navigate(returnUrl);
           }}
           userId={user.id}
         />

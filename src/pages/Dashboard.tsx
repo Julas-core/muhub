@@ -40,18 +40,6 @@ const Dashboard = () => {
     fetchStats();
   }, [user]);
 
-  if (!user) {
-    return (
-      <div className="container mx-auto px-4 py-8">
-        <Card>
-          <CardContent className="text-center py-12">
-            <p className="text-muted-foreground">Please sign in to view your dashboard</p>
-          </CardContent>
-        </Card>
-      </div>
-    );
-  }
-
   return (
     <div className="container mx-auto px-4 py-8">
       <div className="mb-8">

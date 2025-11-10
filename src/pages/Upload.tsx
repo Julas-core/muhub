@@ -32,17 +32,6 @@ const Upload = () => {
   const { toast } = useToast();
   const navigate = useNavigate();
 
-  useEffect(() => {
-    if (!loading && !user) {
-      toast({
-        variant: 'destructive',
-        title: 'Access Denied',
-        description: 'You must be signed in to upload materials.',
-      });
-      navigate('/');
-    }
-  }, [user, loading, navigate, toast]);
-
   const handleFilesSelected = async (files: FileList | null) => {
     if (!files) return;
 

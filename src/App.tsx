@@ -15,6 +15,7 @@ import { useAuth } from '@/hooks/useAuth';
 import FirstTimeUploadModal from './components/FirstTimeUploadModal';
 import { ThemeProvider } from "./components/ThemeProvider";
 import { Breadcrumbs } from "./components/Breadcrumbs";
+import { ProtectedRoute } from "./components/ProtectedRoute";
 import Index from "./pages/Index";
 import Auth from "./pages/Auth";
 import Upload from "./pages/Upload";
@@ -135,25 +136,25 @@ function App() {
                       <Route path="/auth" element={<Auth />} />
                       <Route path="/register" element={<RegisterPage />} />
                       <Route path="/verify-email" element={<EmailVerificationPage />} />
-                      <Route path="/upload" element={<Upload />} />
+                      <Route path="/upload" element={<ProtectedRoute><Upload /></ProtectedRoute>} />
                       <Route path="/about" element={<About />} />
                       <Route path="/contact" element={<Contact />} />
                       <Route path="/help" element={<Help />} />
-                      <Route path="/profile" element={<Profile />} />
+                      <Route path="/profile" element={<ProtectedRoute><Profile /></ProtectedRoute>} />
                       <Route path="/terms" element={<Terms />} />
                        <Route path="/privacy" element={<Privacy />} />
                        <Route path="/disclaimer" element={<Suspense fallback={<div>Loading...</div>}><Disclaimer /></Suspense>} />
                        <Route path="/cookie-policy" element={<Suspense fallback={<div>Loading...</div>}><CookiePolicy /></Suspense>} />
-                       <Route path="/admin" element={<AdminDashboard />} />
-                      <Route path="/dashboard" element={<Dashboard />} />
-                      <Route path="/study-groups" element={<StudyGroups />} />
+                       <Route path="/admin" element={<ProtectedRoute><AdminDashboard /></ProtectedRoute>} />
+                      <Route path="/dashboard" element={<ProtectedRoute><Dashboard /></ProtectedRoute>} />
+                      <Route path="/study-groups" element={<ProtectedRoute><StudyGroups /></ProtectedRoute>} />
                       <Route path="/material/:id" element={<MaterialDetail />} />
                       <Route path="/leaderboard" element={<Leaderboard />} />
-                      <Route path="/exam-prep" element={<ExamPrep />} />
+                      <Route path="/exam-prep" element={<ProtectedRoute><ExamPrep /></ProtectedRoute>} />
                       <Route path="/forum" element={<Forum />} />
                        <Route path="/forum/:id" element={<ForumQuestion />} />
-                       <Route path="/ai-assistant" element={<AIAssistant />} />
-                       <Route path="/notes" element={<Notes />} />
+                       <Route path="/ai-assistant" element={<ProtectedRoute><AIAssistant /></ProtectedRoute>} />
+                       <Route path="/notes" element={<ProtectedRoute><Notes /></ProtectedRoute>} />
                        <Route path="/uploader/:userId" element={<UploaderMaterials />} />
                        <Route path="*" element={<NotFound />} />
                     </Routes>
