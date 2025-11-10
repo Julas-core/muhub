@@ -6,6 +6,7 @@ import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Badge } from '@/components/ui/badge';
 import { Trophy, Medal, Award } from 'lucide-react';
 import { useAuth } from '@/hooks/useAuth';
+import { SEOHead } from '@/components/SEOHead';
 
 interface LeaderboardEntry {
   user_id: string;
@@ -94,7 +95,13 @@ const Leaderboard = () => {
   };
 
   return (
-    <div className="container mx-auto px-4 py-8">
+    <>
+      <SEOHead
+        title="Leaderboard - Top Students Rankings | MUStudy-HUB"
+        description="View the top-performing students at Mekelle University. Track points, rankings, and achievements. See who leads in contributing study materials, helping peers, and engaging with the community."
+        type="website"
+      />
+      <div className="container mx-auto px-4 py-8">
       <div className="max-w-4xl mx-auto">
         <h1 className="text-4xl font-bold mb-2">Leaderboard</h1>
         <p className="text-muted-foreground mb-6">Top performers in the MU StudyHub community</p>
@@ -171,6 +178,7 @@ const Leaderboard = () => {
         </Card>
       </div>
     </div>
+    </>
   );
 };
 

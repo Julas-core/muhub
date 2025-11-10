@@ -320,9 +320,47 @@ const MaterialDetail = () => {
   return (
     <>
       <SEOHead
-        title={`${material.title} - MU Study Hub`}
-        description={material.description || `Download ${material.title} from ${material.course} course`}
+        title={`${material.title} - ${material.course} | MUStudy-HUB`}
+        description={
+          material.description || 
+          `Download ${material.title} for ${material.course} course. ${material.file_type} format. Uploaded by ${uploaderDisplayName}. ${material.download_count} downloads.`
+        }
         type="article"
+        article={{
+          publishedTime: material.created_at,
+          author: uploaderDisplayName,
+          section: material.department,
+          tags: [
+            material.course,
+            material.department,
+            material.file_type,
+            material.material_type || 'Study Material',
+          ],
+        }}
+        educationalMaterial={{
+          name: material.title,
+          description: material.description || `Study material for ${material.course}`,
+          courseCode: material.course,
+          department: material.department,
+          fileType: material.file_type,
+          fileSize: material.file_size || 'Unknown',
+          uploadDate: material.created_at,
+          author: uploaderDisplayName,
+          ratingValue: stats.averageRating,
+          ratingCount: stats.totalRatings,
+          downloadCount: material.download_count,
+          viewCount: material.view_count,
+          keywords: [
+            material.course,
+            material.department,
+            'Mekelle University',
+            material.title,
+            material.material_type === 'exam' ? 'Past Exam' : 'Study Material',
+            material.file_type,
+            'Course Materials',
+            'University Resources',
+          ],
+        }}
       />
       
       <div className="container mx-auto px-4 py-8 max-w-6xl space-y-8">

@@ -13,6 +13,21 @@ interface SEOHeadProps {
     section?: string;
     tags?: string[];
   };
+  educationalMaterial?: {
+    name: string;
+    description: string;
+    courseCode: string;
+    department: string;
+    fileType: string;
+    fileSize: string;
+    uploadDate: string;
+    author: string;
+    ratingValue?: number;
+    ratingCount?: number;
+    downloadCount?: number;
+    viewCount?: number;
+    keywords?: string[];
+  };
 }
 
 export const SEOHead = ({
@@ -21,6 +36,7 @@ export const SEOHead = ({
   image = "/og-image.jpg",
   type = "website",
   article,
+  educationalMaterial,
 }: SEOHeadProps) => {
   const location = useLocation();
   const siteUrl = window.location.origin;
@@ -76,6 +92,65 @@ export const SEOHead = ({
     ],
   };
 
+  // JSON-LD for educational material (LearningResource)
+  const educationalMaterialSchema = educationalMaterial
+    ? {
+        "@context": "https://schema.org",
+        "@type": "LearningResource",
+        name: educationalMaterial.name,
+        description: educationalMaterial.description,
+        learningResourceType: "Course Material",
+        educationalLevel: "University",
+        about: {
+          "@type": "Course",
+          name: educationalMaterial.courseCode,
+          courseCode: educationalMaterial.courseCode,
+          provider: {
+            "@type": "EducationalOrganization",
+            name: "Mekelle University",
+          },
+        },
+        author: {
+          "@type": "Person",
+          name: educationalMaterial.author,
+        },
+        datePublished: educationalMaterial.uploadDate,
+        inLanguage: "en",
+        keywords: educationalMaterial.keywords?.join(", "),
+        encoding: {
+          "@type": "MediaObject",
+          encodingFormat: educationalMaterial.fileType,
+          contentSize: educationalMaterial.fileSize,
+        },
+        aggregateRating:
+          educationalMaterial.ratingValue && educationalMaterial.ratingCount
+            ? {
+                "@type": "AggregateRating",
+                ratingValue: educationalMaterial.ratingValue,
+                ratingCount: educationalMaterial.ratingCount,
+                bestRating: 5,
+                worstRating: 1,
+              }
+            : undefined,
+        interactionStatistic: [
+          educationalMaterial.downloadCount
+            ? {
+                "@type": "InteractionCounter",
+                interactionType: "https://schema.org/DownloadAction",
+                userInteractionCount: educationalMaterial.downloadCount,
+              }
+            : undefined,
+          educationalMaterial.viewCount
+            ? {
+                "@type": "InteractionCounter",
+                interactionType: "https://schema.org/ViewAction",
+                userInteractionCount: educationalMaterial.viewCount,
+              }
+            : undefined,
+        ].filter(Boolean),
+      }
+    : null;
+
   return (
     <Helmet>
       {/* Primary Meta Tags */}
@@ -120,12 +195,30 @@ export const SEOHead = ({
       <meta name="robots" content="index, follow" />
       <meta name="language" content="English" />
       <meta name="revisit-after" content="7 days" />
-      <meta name="author" content="MUStudy-HUB" />
+      <meta name="author" content={educationalMaterial?.author || "MUStudy-HUB"} />
+
+      {/* Educational Material Specific Tags */}
+      {educationalMaterial && (
+        <>
+          <meta name="keywords" content={educationalMaterial.keywords?.join(", ")} />
+          <meta name="DC.title" content={educationalMaterial.name} />
+          <meta name="DC.creator" content={educationalMaterial.author} />
+          <meta name="DC.subject" content={educationalMaterial.courseCode} />
+          <meta name="DC.description" content={educationalMaterial.description} />
+          <meta name="DC.publisher" content="MUStudy-HUB" />
+          <meta name="DC.date" content={educationalMaterial.uploadDate} />
+          <meta name="DC.type" content="Text" />
+          <meta name="DC.format" content={educationalMaterial.fileType} />
+        </>
+      )}
 
       {/* Structured Data */}
       <script type="application/ld+json">{JSON.stringify(organizationSchema)}</script>
       <script type="application/ld+json">{JSON.stringify(websiteSchema)}</script>
       <script type="application/ld+json">{JSON.stringify(breadcrumbSchema)}</script>
+      {educationalMaterialSchema && (
+        <script type="application/ld+json">{JSON.stringify(educationalMaterialSchema)}</script>
+      )}
     </Helmet>
   );
 };

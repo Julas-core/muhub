@@ -12,6 +12,7 @@ import { MessageSquare, ThumbsUp, Eye, Plus } from 'lucide-react';
 import { toast } from 'sonner';
 import { MEKELLE_UNIVERSITY_SCHOOLS } from '@/constants/colleges';
 import { useNavigate } from 'react-router-dom';
+import { SEOHead } from '@/components/SEOHead';
 
 interface Question {
   id: string;
@@ -112,7 +113,13 @@ const Forum = () => {
   };
 
   return (
-    <div className="container mx-auto px-4 py-8">
+    <>
+      <SEOHead
+        title="Discussion Forum - Ask Questions & Get Answers | MUStudy-HUB"
+        description="Join the Mekelle University student discussion forum. Ask questions, share knowledge, and get help with your courses. Community-driven academic support for all departments."
+        type="website"
+      />
+      <div className="container mx-auto px-4 py-8">
       <div className="max-w-5xl mx-auto">
         <div className="flex justify-between items-start mb-6">
           <div>
@@ -237,6 +244,7 @@ const Forum = () => {
         )}
       </div>
     </div>
+    </>
   );
 };
 

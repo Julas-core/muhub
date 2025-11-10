@@ -9,6 +9,7 @@ import { Badge } from '@/components/ui/badge';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { ArrowLeft, ThumbsUp, CheckCircle } from 'lucide-react';
 import { toast } from 'sonner';
+import { SEOHead } from '@/components/SEOHead';
 
 interface Question {
   id: string;
@@ -196,7 +197,19 @@ const ForumQuestion = () => {
   }
 
   return (
-    <div className="container mx-auto px-4 py-8">
+    <>
+      <SEOHead
+        title={`${question.title} - Forum Discussion | MUStudy-HUB`}
+        description={question.content.substring(0, 160)}
+        type="article"
+        article={{
+          publishedTime: question.created_at,
+          author: question.profiles?.full_name || 'Anonymous',
+          section: question.department,
+          tags: [question.course, question.department, 'Forum', 'Discussion'],
+        }}
+      />
+      <div className="container mx-auto px-4 py-8">
       <div className="max-w-4xl mx-auto">
         <Button variant="ghost" onClick={() => navigate('/forum')} className="mb-4">
           <ArrowLeft className="h-4 w-4 mr-2" />
@@ -309,6 +322,7 @@ const ForumQuestion = () => {
         )}
       </div>
     </div>
+    </>
   );
 };
 
