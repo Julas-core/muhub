@@ -38,6 +38,24 @@ const MaterialDetail = () => {
 
   const isBookmarked = id ? bookmarks.has(id) : false;
 
+  // Track view when material is loaded
+  useEffect(() => {
+    const trackView = async () => {
+      if (!id) return;
+      
+      try {
+        await supabase.rpc('track_material_view', {
+          p_material_id: id,
+          p_viewer_user_id: user?.id || null,
+        });
+      } catch (error) {
+        console.error('Error tracking view:', error);
+      }
+    };
+    
+    trackView();
+  }, [id, user?.id]);
+
   useEffect(() => {
     const fetchMaterial = async () => {
       if (!id) return;
@@ -115,10 +133,27 @@ const MaterialDetail = () => {
       window.URL.revokeObjectURL(url);
       document.body.removeChild(a);
 
+      // Track download in material_downloads table
+      if (user?.id) {
+        await supabase
+          .from('material_downloads')
+          .insert({
+            material_id: material.id,
+            downloader_user_id: user.id,
+          });
+      }
+
       // Increment download count
       await supabase.rpc('increment_download_count', {
         p_material_id: material.id
       });
+
+      // Get updated download count for notification check
+      const { data: updatedMaterial } = await supabase
+        .from('materials')
+        .select('download_count')
+        .eq('id', material.id)
+        .single();
 
       // Award points
       if (user?.id) {
@@ -137,6 +172,19 @@ const MaterialDetail = () => {
           p_action_type: 'material_downloaded',
           p_reference_id: material.id,
         });
+
+        // Send email notification at milestones (async, non-blocking)
+        if (updatedMaterial?.download_count) {
+          supabase.functions
+            .invoke('send-download-notification', {
+              body: {
+                materialId: material.id,
+                uploaderId: material.uploaded_by_user_id,
+                downloadCount: updatedMaterial.download_count,
+              },
+            })
+            .catch((err) => console.error('Notification error:', err));
+        }
       }
 
       toast({
@@ -167,7 +215,86 @@ const MaterialDetail = () => {
   if (loading) {
     return (
       <div className="container mx-auto px-4 py-8 max-w-6xl">
-        <Skeleton className="h-96 w-full" />
+        <Skeleton className="h-10 w-32 mb-4" />
+        
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+          {/* Left Column Skeleton */}
+          <div className="lg:col-span-2 space-y-6">
+            <Card>
+              <CardHeader>
+                <div className="flex items-start justify-between gap-4 mb-4">
+                  <div className="flex items-center gap-2">
+                    <Skeleton className="h-7 w-16" />
+                    <Skeleton className="h-7 w-20" />
+                  </div>
+                  <Skeleton className="h-9 w-9 rounded-full" />
+                </div>
+                <Skeleton className="h-9 w-3/4 mb-4" />
+                <div className="flex items-center gap-2">
+                  <Skeleton className="h-7 w-32" />
+                  <Skeleton className="h-7 w-40" />
+                </div>
+              </CardHeader>
+              <CardContent className="space-y-6">
+                <div>
+                  <Skeleton className="h-6 w-32 mb-2" />
+                  <Skeleton className="h-4 w-full mb-2" />
+                  <Skeleton className="h-4 w-5/6" />
+                </div>
+                <Separator />
+                <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
+                  {[1, 2, 3].map((i) => (
+                    <div key={i} className="flex items-center gap-2">
+                      <Skeleton className="h-5 w-5 rounded-full" />
+                      <div>
+                        <Skeleton className="h-8 w-16 mb-1" />
+                        <Skeleton className="h-4 w-20" />
+                      </div>
+                    </div>
+                  ))}
+                </div>
+                <Separator />
+                <div className="space-y-4">
+                  <Skeleton className="h-6 w-48" />
+                  <Skeleton className="h-8 w-64" />
+                </div>
+                <Separator />
+                <Skeleton className="h-12 w-full" />
+              </CardContent>
+            </Card>
+          </div>
+
+          {/* Right Column Skeleton */}
+          <div className="space-y-6">
+            <Card>
+              <CardHeader>
+                <Skeleton className="h-5 w-32" />
+              </CardHeader>
+              <CardContent className="space-y-4">
+                <div className="flex items-center gap-3">
+                  <Skeleton className="h-12 w-12 rounded-full" />
+                  <div className="flex-1">
+                    <Skeleton className="h-5 w-32 mb-1" />
+                    <Skeleton className="h-4 w-16" />
+                  </div>
+                </div>
+                <Separator />
+                <div className="space-y-2">
+                  <Skeleton className="h-4 w-full" />
+                  <Skeleton className="h-4 w-full" />
+                </div>
+              </CardContent>
+            </Card>
+            <Card>
+              <CardHeader>
+                <Skeleton className="h-5 w-24" />
+              </CardHeader>
+              <CardContent>
+                <Skeleton className="h-10 w-full" />
+              </CardContent>
+            </Card>
+          </div>
+        </div>
       </div>
     );
   }
@@ -267,10 +394,17 @@ const MaterialDetail = () => {
                 {/* Stats */}
                 <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
                   <div className="flex items-center gap-2">
-                    <Eye className="h-5 w-5 text-muted-foreground" />
+                    <Download className="h-5 w-5 text-muted-foreground" />
                     <div>
                       <p className="text-2xl font-bold">{material.download_count || 0}</p>
                       <p className="text-sm text-muted-foreground">Downloads</p>
+                    </div>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <Eye className="h-5 w-5 text-muted-foreground" />
+                    <div>
+                      <p className="text-2xl font-bold">{material.view_count || 0}</p>
+                      <p className="text-sm text-muted-foreground">Views</p>
                     </div>
                   </div>
                   <div className="flex items-center gap-2">

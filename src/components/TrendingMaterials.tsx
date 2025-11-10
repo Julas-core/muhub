@@ -22,16 +22,11 @@ export const TrendingMaterials = () => {
     }
 
     const fetchTrending = async () => {
-      // Get materials with highest download count in last 7 days
-      const sevenDaysAgo = new Date();
-      sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 7);
-
+      // Use the new trending_materials view with advanced scoring
       const { data } = await supabase
-        .from('materials')
+        .from('trending_materials')
         .select('*')
-        .gte('created_at', sevenDaysAgo.toISOString())
-        .order('download_count', { ascending: false })
-        .limit(5); // Updated to show up to 5 materials
+        .limit(5);
 
       if (data) {
         setMaterials(data);

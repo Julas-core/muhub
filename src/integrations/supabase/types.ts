@@ -79,6 +79,13 @@ export type Database = {
             referencedRelation: "materials"
             referencedColumns: ["id"]
           },
+          {
+            foreignKeyName: "ai_chat_sessions_material_id_fkey"
+            columns: ["material_id"]
+            isOneToOne: false
+            referencedRelation: "trending_materials"
+            referencedColumns: ["id"]
+          },
         ]
       }
       badges: {
@@ -138,6 +145,13 @@ export type Database = {
             referencedRelation: "materials"
             referencedColumns: ["id"]
           },
+          {
+            foreignKeyName: "bookmarks_material_id_fkey"
+            columns: ["material_id"]
+            isOneToOne: false
+            referencedRelation: "trending_materials"
+            referencedColumns: ["id"]
+          },
         ]
       }
       comments: {
@@ -174,6 +188,13 @@ export type Database = {
             columns: ["material_id"]
             isOneToOne: false
             referencedRelation: "materials"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "comments_material_id_fkey"
+            columns: ["material_id"]
+            isOneToOne: false
+            referencedRelation: "trending_materials"
             referencedColumns: ["id"]
           },
           {
@@ -337,6 +358,42 @@ export type Database = {
           },
         ]
       }
+      material_downloads: {
+        Row: {
+          downloaded_at: string
+          downloader_user_id: string | null
+          id: string
+          material_id: string
+        }
+        Insert: {
+          downloaded_at?: string
+          downloader_user_id?: string | null
+          id?: string
+          material_id: string
+        }
+        Update: {
+          downloaded_at?: string
+          downloader_user_id?: string | null
+          id?: string
+          material_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "material_downloads_material_id_fkey"
+            columns: ["material_id"]
+            isOneToOne: false
+            referencedRelation: "materials"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "material_downloads_material_id_fkey"
+            columns: ["material_id"]
+            isOneToOne: false
+            referencedRelation: "trending_materials"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       material_reports: {
         Row: {
           created_at: string
@@ -374,6 +431,13 @@ export type Database = {
             columns: ["material_id"]
             isOneToOne: false
             referencedRelation: "materials"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "material_reports_material_id_fkey"
+            columns: ["material_id"]
+            isOneToOne: false
+            referencedRelation: "trending_materials"
             referencedColumns: ["id"]
           },
         ]
@@ -442,10 +506,56 @@ export type Database = {
             referencedColumns: ["id"]
           },
           {
+            foreignKeyName: "material_tags_material_id_fkey"
+            columns: ["material_id"]
+            isOneToOne: false
+            referencedRelation: "trending_materials"
+            referencedColumns: ["id"]
+          },
+          {
             foreignKeyName: "material_tags_tag_id_fkey"
             columns: ["tag_id"]
             isOneToOne: false
             referencedRelation: "tags"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      material_views: {
+        Row: {
+          id: string
+          ip_address: string | null
+          material_id: string
+          viewed_at: string
+          viewer_user_id: string | null
+        }
+        Insert: {
+          id?: string
+          ip_address?: string | null
+          material_id: string
+          viewed_at?: string
+          viewer_user_id?: string | null
+        }
+        Update: {
+          id?: string
+          ip_address?: string | null
+          material_id?: string
+          viewed_at?: string
+          viewer_user_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "material_views_material_id_fkey"
+            columns: ["material_id"]
+            isOneToOne: false
+            referencedRelation: "materials"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "material_views_material_id_fkey"
+            columns: ["material_id"]
+            isOneToOne: false
+            referencedRelation: "trending_materials"
             referencedColumns: ["id"]
           },
         ]
@@ -467,6 +577,7 @@ export type Database = {
           title: string
           uploaded_by: string
           uploaded_by_user_id: string
+          view_count: number
         }
         Insert: {
           course: string
@@ -484,6 +595,7 @@ export type Database = {
           title: string
           uploaded_by: string
           uploaded_by_user_id: string
+          view_count?: number
         }
         Update: {
           course?: string
@@ -501,6 +613,7 @@ export type Database = {
           title?: string
           uploaded_by?: string
           uploaded_by_user_id?: string
+          view_count?: number
         }
         Relationships: []
       }
@@ -627,6 +740,13 @@ export type Database = {
             referencedRelation: "materials"
             referencedColumns: ["id"]
           },
+          {
+            foreignKeyName: "ratings_material_id_fkey"
+            columns: ["material_id"]
+            isOneToOne: false
+            referencedRelation: "trending_materials"
+            referencedColumns: ["id"]
+          },
         ]
       }
       recently_viewed: {
@@ -654,6 +774,13 @@ export type Database = {
             columns: ["material_id"]
             isOneToOne: false
             referencedRelation: "materials"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "recently_viewed_material_id_fkey"
+            columns: ["material_id"]
+            isOneToOne: false
+            referencedRelation: "trending_materials"
             referencedColumns: ["id"]
           },
         ]
@@ -760,6 +887,13 @@ export type Database = {
             columns: ["material_id"]
             isOneToOne: false
             referencedRelation: "materials"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "study_notes_material_id_fkey"
+            columns: ["material_id"]
+            isOneToOne: false
+            referencedRelation: "trending_materials"
             referencedColumns: ["id"]
           },
         ]
@@ -879,7 +1013,66 @@ export type Database = {
       }
     }
     Views: {
-      [_ in never]: never
+      trending_materials: {
+        Row: {
+          course: string | null
+          created_at: string | null
+          department: string | null
+          description: string | null
+          download_count: number | null
+          exam_semester: string | null
+          exam_year: string | null
+          file_path: string | null
+          file_size: string | null
+          file_type: string | null
+          id: string | null
+          material_type: string | null
+          title: string | null
+          trending_score: number | null
+          uploaded_by: string | null
+          uploaded_by_user_id: string | null
+          view_count: number | null
+        }
+        Insert: {
+          course?: string | null
+          created_at?: string | null
+          department?: string | null
+          description?: string | null
+          download_count?: number | null
+          exam_semester?: string | null
+          exam_year?: string | null
+          file_path?: string | null
+          file_size?: string | null
+          file_type?: string | null
+          id?: string | null
+          material_type?: string | null
+          title?: string | null
+          trending_score?: never
+          uploaded_by?: string | null
+          uploaded_by_user_id?: string | null
+          view_count?: number | null
+        }
+        Update: {
+          course?: string | null
+          created_at?: string | null
+          department?: string | null
+          description?: string | null
+          download_count?: number | null
+          exam_semester?: string | null
+          exam_year?: string | null
+          file_path?: string | null
+          file_size?: string | null
+          file_type?: string | null
+          id?: string | null
+          material_type?: string | null
+          title?: string | null
+          trending_score?: never
+          uploaded_by?: string | null
+          uploaded_by_user_id?: string | null
+          view_count?: number | null
+        }
+        Relationships: []
+      }
     }
     Functions: {
       award_points: {
@@ -910,6 +1103,14 @@ export type Database = {
       is_admin_email:
         | { Args: { email: string }; Returns: boolean }
         | { Args: { p_user_id: string }; Returns: boolean }
+      track_material_view: {
+        Args: {
+          p_ip_address?: string
+          p_material_id: string
+          p_viewer_user_id?: string
+        }
+        Returns: undefined
+      }
     }
     Enums: {
       app_role: "admin" | "moderator" | "user"
