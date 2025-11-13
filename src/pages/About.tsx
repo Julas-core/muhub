@@ -1,8 +1,6 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-
 const About = () => {
-  return (
-    <div className="min-h-screen bg-gradient-to-b from-background to-secondary/20 py-16">
+  return <div className="min-h-screen bg-gradient-to-b from-background to-secondary/20 py-16">
       <div className="container mx-auto px-4 max-w-4xl">
         <Card className="shadow-lg">
           <CardHeader className="text-center">
@@ -95,7 +93,7 @@ const About = () => {
             </section>
             
             <section>
-              <h2 className="text-2xl font-semibold mb-4">Our Impact</h2>
+              <h2 className="text-2xl font-semibold mb-4">​The Goal</h2>
               <div className="grid md:grid-cols-3 gap-4 mt-4">
                 <div className="bg-primary/5 p-4 rounded-lg text-center">
                   <div className="text-3xl font-bold text-primary">10,000+</div>
@@ -152,8 +150,6 @@ const About = () => {
           </CardContent>
         </Card>
       </div>
-    </div>
-  );
+    </div>;
 };
-
 export default About;
